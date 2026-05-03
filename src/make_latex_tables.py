@@ -8,15 +8,15 @@ CONSTANTS = get_constants()
 WEBSITES = CONSTANTS["websites"]
 
 
-def _get_nettskjema_answer_options():
+def _get_survey_answer_options():
     """
-    Returns the answers options for the nettskjema questions, as values in a dict where the
+    Returns the answers options for the survey questions, as values in a dict where the
     keys are the columns for the respective questions.
 
     Returns:
         dict: The answer options.
     """
-    all_nettskjema_answer_options = {
+    all_survey_answer_options = {
         "privacy_concern": [
             "Very concerned",
             "Quite concerned",
@@ -66,10 +66,10 @@ def _get_nettskjema_answer_options():
             "No",
         ],
     }
-    return all_nettskjema_answer_options
+    return all_survey_answer_options
 
 
-def _get_nettskjema_question_mapping():
+def _get_survey_question_mapping():
     """
     Maps the column names for the questions to the actual questions with numbers.
 
@@ -113,9 +113,9 @@ def _get_test_varible_mapping():
     return test_variable_mapping
 
 
-def make_nettskjema_report_latex(df, caption="", label=""):
+def make_survey_report_latex(df, caption="", label=""):
     """
-    Make a LaTeX table for the answers to the quantitative nettskjema questions.
+    Make a LaTeX table for the answers to the quantitative survey questions.
 
     Args:
         df (pd.DataFrame): The dataframe with the results.
@@ -125,9 +125,9 @@ def make_nettskjema_report_latex(df, caption="", label=""):
     Returns:
         str: The LaTeX table as a string.
     """
-    all_nettskjema_answer_options = _get_nettskjema_answer_options()
-    nettskjema_question_mapping = _get_nettskjema_question_mapping()
-    columns = list(all_nettskjema_answer_options.keys())
+    all_survey_answer_options = _get_survey_answer_options()
+    survey_question_mapping = _get_survey_question_mapping()
+    columns = list(all_survey_answer_options.keys())
 
     lines = []
     lines.append("\\begin{table}[htbp]")
@@ -140,11 +140,11 @@ def make_nettskjema_report_latex(df, caption="", label=""):
 
     for column in columns:
         # Add a bold row with the question name above the responses
-        question = nettskjema_question_mapping[column]
+        question = survey_question_mapping[column]
         question_formatted = re.sub(r"(Q\d{1,2}\.)", r"\\textbf{\1}", question)
         lines.append(f"        {question_formatted} & ~ \\\\[0.2em]")
 
-        counts = df[column].value_counts().reindex(all_nettskjema_answer_options[column], fill_value=0)
+        counts = df[column].value_counts().reindex(all_survey_answer_options[column], fill_value=0)
         for response, count in counts.items():
             response = str(response).replace("_", " ")
             lines.append(f"        {response} & {count} \\\\")
@@ -340,9 +340,7 @@ def make_bootstrap_latex_table(results_dict, test_variables=None, groups=None, c
             else:
                 confidence_intervals = f"[{ci_low:.2f}, {ci_high:.2f}]"
 
-            lines.append(
-                f"        {grouping_name} & {mean_diff:.2f} & {cohens_d:.2f} & {confidence_intervals} \\\\"
-            )
+            lines.append(f"        {grouping_name} & {mean_diff:.2f} & {cohens_d:.2f} & {confidence_intervals} \\\\")
 
         lines.append("        \\hline")
 
@@ -370,7 +368,7 @@ def make_website_statistics_latex_table(website_stats, test_variable="accepts", 
         str: A LaTeX-formatted table string.
     """
     if test_variable not in ["accepts", "time"]:
-        raise ValueError(f"Invalid test_variable \"{test_variable}\". Must be \"accepts\" or \"time\".")
+        raise ValueError(f'Invalid test_variable "{test_variable}". Must be "accepts" or "time".')
 
     stat_suffix = "accepts" if test_variable == "accepts" else "time"
 
@@ -423,7 +421,7 @@ def make_devices_wilcoxon_table(website_stats, test_variable="accepts", caption=
         str: A LaTeX-formatted table string.
     """
     if test_variable not in ["accepts", "time"]:
-        raise ValueError(f"Invalid test_variable \"{test_variable}\". Must be \"accepts\" or \"time\".")
+        raise ValueError(f'Invalid test_variable "{test_variable}". Must be "accepts" or "time".')
 
     key = f"test_statistics_{test_variable}"
 
@@ -481,16 +479,9 @@ def make_friedman_latex_table(results_dict, caption="", label=""):
     )
     lines.append("        \\hline")
 
-    device_mapping = {
-        "computer": "Computer",
-        "phone": "Phone",
-        "both": "Both devices"
-    }
+    device_mapping = {"computer": "Computer", "phone": "Phone", "both": "Both devices"}
 
-    test_variable_mapping = {
-        "accepts": "Consent accepts",
-        "time": "Banner answer time"
-    }
+    test_variable_mapping = {"accepts": "Consent accepts", "time": "Banner answer time"}
 
     for test_variable in ["accepts", "time"]:
         readable_test_variable = test_variable_mapping[test_variable]
@@ -595,11 +586,7 @@ def make_withdrawal_statistics_latex_table(results_dict, caption="", label=""):
     lines.append(header)
     lines.append("        \\hline")
 
-    device_mapping = {
-        "computer": "Computer",
-        "phone": "Phone",
-        "both": "Both devices"
-    }
+    device_mapping = {"computer": "Computer", "phone": "Phone", "both": "Both devices"}
 
     website_order = WEBSITES + ["all"]
 

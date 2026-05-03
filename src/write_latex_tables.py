@@ -1,25 +1,49 @@
 import os
 from pathlib import Path
 
-from src.generate_results import (get_all_friedman_test_results, get_all_group_test_results, get_website_statistics,
-                                  get_withdrawal_and_answer_times)
+from src.generate_results import (
+    get_all_friedman_test_results,
+    get_all_group_test_results,
+    get_website_statistics,
+    get_withdrawal_and_answer_times,
+)
 from src.get_constants import get_constants
 from src.hypothesis_tests import run_pairwise_wilcoxon_tests
-from src.latex_table_captions import (BOOTSTRAP_EXTRA_ACCEPTS_CAPTION, BOOTSTRAP_EXTRA_TIME_CAPTION,
-                                      BOOTSTRAP_MAIN_CAPTION, FRIEDMAN_CAPTION, MEAN_AND_SD_EXTRA_ACCEPTS_CAPTION,
-                                      MEAN_AND_SD_EXTRA_TIME_CAPTION, MEAN_AND_SD_MAIN_CAPTION,
-                                      NETTSKJEMA_REPORT_CAPTION, SHAPIRO_WILK_EXTRA_ACCEPTS_CAPTION,
-                                      SHAPIRO_WILK_EXTRA_TIME_CAPTION, SHAPIRO_WILK_MAIN_CAPTION,
-                                      WEBSITE_DEVICES_TESTS_ACCEPTS_CAPTION, WEBSITE_DEVICES_TESTS_TIME_CAPTION,
-                                      WEBSITE_STATISTICS_ACCEPTS_CAPTION, WEBSITE_STATISTICS_TIME_CAPTION,
-                                      WILCOXON_COMPUTER_ACCEPTS_CAPTION, WILCOXON_COMPUTER_TIME_CAPTION,
-                                      WILCOXON_PHONE_ACCEPTS_CAPTION, WILCOXON_PHONE_TIME_CAPTION,
-                                      WILCOXON_TOTAL_ACCEPTS_CAPTION, WILCOXON_TOTAL_TIME_CAPTION,
-                                      WITHDRAWAL_STATISTICS_CAPTION)
-from src.make_latex_tables import (make_bootstrap_latex_table, make_devices_wilcoxon_table, make_friedman_latex_table,
-                                   make_mean_sd_latex_table, make_nettskjema_report_latex, make_shapiro_latex_table,
-                                   make_website_statistics_latex_table, make_wilcoxon_latex_table,
-                                   make_withdrawal_statistics_latex_table)
+from src.latex_table_captions import (
+    BOOTSTRAP_EXTRA_ACCEPTS_CAPTION,
+    BOOTSTRAP_EXTRA_TIME_CAPTION,
+    BOOTSTRAP_MAIN_CAPTION,
+    FRIEDMAN_CAPTION,
+    MEAN_AND_SD_EXTRA_ACCEPTS_CAPTION,
+    MEAN_AND_SD_EXTRA_TIME_CAPTION,
+    MEAN_AND_SD_MAIN_CAPTION,
+    SURVEY_REPORT_CAPTION,
+    SHAPIRO_WILK_EXTRA_ACCEPTS_CAPTION,
+    SHAPIRO_WILK_EXTRA_TIME_CAPTION,
+    SHAPIRO_WILK_MAIN_CAPTION,
+    WEBSITE_DEVICES_TESTS_ACCEPTS_CAPTION,
+    WEBSITE_DEVICES_TESTS_TIME_CAPTION,
+    WEBSITE_STATISTICS_ACCEPTS_CAPTION,
+    WEBSITE_STATISTICS_TIME_CAPTION,
+    WILCOXON_COMPUTER_ACCEPTS_CAPTION,
+    WILCOXON_COMPUTER_TIME_CAPTION,
+    WILCOXON_PHONE_ACCEPTS_CAPTION,
+    WILCOXON_PHONE_TIME_CAPTION,
+    WILCOXON_TOTAL_ACCEPTS_CAPTION,
+    WILCOXON_TOTAL_TIME_CAPTION,
+    WITHDRAWAL_STATISTICS_CAPTION,
+)
+from src.make_latex_tables import (
+    make_bootstrap_latex_table,
+    make_devices_wilcoxon_table,
+    make_friedman_latex_table,
+    make_mean_sd_latex_table,
+    make_survey_report_latex,
+    make_shapiro_latex_table,
+    make_website_statistics_latex_table,
+    make_wilcoxon_latex_table,
+    make_withdrawal_statistics_latex_table,
+)
 
 CONSTANTS = get_constants()
 GROUP_TESTS_FOLDER = CONSTANTS["paths"]["folders"]["group_tests_folder"]
@@ -45,21 +69,21 @@ def _write_latex_table_to_file(text, filename, folder):
         outfile.write(text)
 
 
-def write_nettskjema_report(df):
+def write_survey_report(df):
     """
-    Writes the nettskjema report to file.
-    This contains information about the number of answers on each of the quantitative questions from the nettskjema
+    Writes the survey report to file.
+    This contains information about the number of answers on each of the quantitative questions from the survey
     survey.
 
     Args:
         df (pd.DataFrame): The dataframe with the results. Get with `src.utils.get_all_data()`
     """
-    caption = NETTSKJEMA_REPORT_CAPTION.replace("\n", " ")
-    label = "tab:nettskjema_report"
-    filename = "nettskjema_report.txt"
+    caption = SURVEY_REPORT_CAPTION.replace("\n", " ")
+    label = "tab:survey_report"
+    filename = "survey_report.txt"
     folder = OVERVIEW_TABLES_FOLDER
-    nettskjema_table = make_nettskjema_report_latex(df, caption=caption, label=label)
-    _write_latex_table_to_file(text=nettskjema_table, filename=filename, folder=folder)
+    survey_table = make_survey_report_latex(df, caption=caption, label=label)
+    _write_latex_table_to_file(text=survey_table, filename=filename, folder=folder)
 
 
 def write_shapiro_wilk_main(df):
@@ -299,10 +323,7 @@ def write_website_statistics_accepts(df):
     folder = WEBISTE_TESTS_FOLDER
     results = get_website_statistics(df)
     website_statistics_table = make_website_statistics_latex_table(
-        results,
-        test_variable="accepts",
-        caption=caption,
-        label=label
+        results, test_variable="accepts", caption=caption, label=label
     )
     _write_latex_table_to_file(website_statistics_table, filename=filename, folder=folder)
 
@@ -320,10 +341,7 @@ def write_website_statistics_time(df):
     folder = WEBISTE_TESTS_FOLDER
     results = get_website_statistics(df)
     website_statistics_table = make_website_statistics_latex_table(
-        results,
-        test_variable="time",
-        caption=caption,
-        label=label
+        results, test_variable="time", caption=caption, label=label
     )
     _write_latex_table_to_file(website_statistics_table, filename=filename, folder=folder)
 
@@ -341,10 +359,7 @@ def write_website_tests_accepts(df):
     folder = WEBISTE_TESTS_FOLDER
     results = get_website_statistics(df, perform_wilcoxon_test=True)
     website_statistics_table = make_devices_wilcoxon_table(
-        results,
-        test_variable="accepts",
-        caption=caption,
-        label=label
+        results, test_variable="accepts", caption=caption, label=label
     )
     _write_latex_table_to_file(website_statistics_table, filename=filename, folder=folder)
 
@@ -361,12 +376,7 @@ def write_website_tests_time(df):
     filename = "website_devices_tests_time.txt"
     folder = WEBISTE_TESTS_FOLDER
     results = get_website_statistics(df, perform_wilcoxon_test=True)
-    website_statistics_table = make_devices_wilcoxon_table(
-        results,
-        test_variable="time",
-        caption=caption,
-        label=label
-    )
+    website_statistics_table = make_devices_wilcoxon_table(results, test_variable="time", caption=caption, label=label)
     _write_latex_table_to_file(website_statistics_table, filename=filename, folder=folder)
 
 
@@ -402,11 +412,7 @@ def write_wilcoxon_total_accepts(df):
     label = "tab:wilcoxon_total_accepts"
     filename = "wilcoxon_total_accepts.txt"
     folder = WEBISTE_TESTS_FOLDER
-    results = run_pairwise_wilcoxon_tests(
-        df,
-        test_variable="accepts",
-        device="both"
-    )
+    results = run_pairwise_wilcoxon_tests(df, test_variable="accepts", device="both")
     wilcoxon_table = make_wilcoxon_latex_table(
         results,
         caption=caption,
@@ -426,11 +432,7 @@ def write_wilcoxon_computer_accepts(df):
     label = "tab:wilcoxon_computer_accepts"
     filename = "wilcoxon_computer_accepts.txt"
     folder = WEBISTE_TESTS_FOLDER
-    results = run_pairwise_wilcoxon_tests(
-        df,
-        test_variable="accepts",
-        device="computer"
-    )
+    results = run_pairwise_wilcoxon_tests(df, test_variable="accepts", device="computer")
     wilcoxon_table = make_wilcoxon_latex_table(
         results,
         caption=caption,
@@ -450,11 +452,7 @@ def write_wilcoxon_phone_accepts(df):
     label = "tab:wilcoxon_phone_accepts"
     filename = "wilcoxon_phone_accepts.txt"
     folder = WEBISTE_TESTS_FOLDER
-    results = run_pairwise_wilcoxon_tests(
-        df,
-        test_variable="accepts",
-        device="phone"
-    )
+    results = run_pairwise_wilcoxon_tests(df, test_variable="accepts", device="phone")
     wilcoxon_table = make_wilcoxon_latex_table(
         results,
         caption=caption,
@@ -474,11 +472,7 @@ def write_wilcoxon_total_time(df):
     label = "tab:wilcoxon_total_times"
     filename = "wilcoxon_total_time.txt"
     folder = WEBISTE_TESTS_FOLDER
-    results = run_pairwise_wilcoxon_tests(
-        df,
-        test_variable="time",
-        device="both"
-    )
+    results = run_pairwise_wilcoxon_tests(df, test_variable="time", device="both")
     wilcoxon_table = make_wilcoxon_latex_table(
         results,
         caption=caption,
@@ -498,11 +492,7 @@ def write_wilcoxon_computer_time(df):
     label = "tab:wilcoxon_computer_times"
     filename = "wilcoxon_computer_time.txt"
     folder = WEBISTE_TESTS_FOLDER
-    results = run_pairwise_wilcoxon_tests(
-        df,
-        test_variable="time",
-        device="computer"
-    )
+    results = run_pairwise_wilcoxon_tests(df, test_variable="time", device="computer")
     wilcoxon_table = make_wilcoxon_latex_table(
         results,
         caption=caption,
@@ -523,11 +513,7 @@ def write_wilcoxon_phone_time(df):
     label = "tab:wilcoxon_phone_times"
     filename = "wilcoxon_phone_time.txt"
     folder = WEBISTE_TESTS_FOLDER
-    results = run_pairwise_wilcoxon_tests(
-        df,
-        test_variable="time",
-        device="phone"
-    )
+    results = run_pairwise_wilcoxon_tests(df, test_variable="time", device="phone")
     wilcoxon_table = make_wilcoxon_latex_table(
         results,
         caption=caption,
@@ -556,14 +542,23 @@ def write_withdrawal_statistics_table(df):
     _write_latex_table_to_file(text=withdrawal_table, filename=filename, folder=folder)
 
 
-def write_all_latex_tables(df, nettskjema_report=False, shapiro_wilk=False, mean_and_sd=False, bootstrap=False,
-                           website_statistics=False, friedman=False, wilcoxon=False, withdrawal=False):
+def write_all_latex_tables(
+    df,
+    survey_report=False,
+    shapiro_wilk=False,
+    mean_and_sd=False,
+    bootstrap=False,
+    website_statistics=False,
+    friedman=False,
+    wilcoxon=False,
+    withdrawal=False,
+):
     """
     Writes the LaTeX tables, depending on the arguments passed. Calls all of the other functions to do so.
 
     Args:
         df (pd.DataFrame): The dataframe with the results. Get with `src.utils.get_all_data()`
-        nettskjema_report (bool): Whether or not to write the nettskjema report.
+        survey_report (bool): Whether or not to write the survey report.
         shapiro_wilk (bool): Whether or not to write the three Shapiro-Wilk normality tables.
         mean_and_sd (bool): Whether or not to write the three mean and standard deviation tables.
         bootstrap (bool): Whether or not to print the three bootstrap tables.
@@ -572,8 +567,8 @@ def write_all_latex_tables(df, nettskjema_report=False, shapiro_wilk=False, mean
         wilcoxon (bool): Whether or not to print the six Wilcoxon tables.
         withdrawal (bool): Whether or not to print the average response and withdrawal time table.
     """
-    if nettskjema_report:
-        write_nettskjema_report(df)
+    if survey_report:
+        write_survey_report(df)
     if shapiro_wilk:
         write_shapiro_wilk_main(df)
         write_shapiro_wilk_extra_accepts(df)

@@ -8,15 +8,15 @@ PATHS = get_constants()["paths"]
 DATA_FOLDER = Path(PATHS["folders"]["data_folder"])
 PARTICIPANTS_FOLDER_BASE = PATHS["folders"]["participant_folder_base"]
 
-NETTSKJEMA_FILENAME = PATHS["filenames"]["nettskjema"]
+SURVEY_FILENAME = PATHS["filenames"]["survey"]
 EXPERIMENT_RESULTS_FILENAME = PATHS["filenames"]["experiment_results"]
 ALL_EXPERIMENTS_FILENAME = PATHS["filenames"]["all_experiment_results"]
-NETTSKJEMA_QUESTIONS_FILENAME = PATHS["filenames"]["nettskjema_questions"]
+SURVEY_QUESTIONS_FILENAME = PATHS["filenames"]["survey_questions"]
 QUALITATIVE_ANSWERS_FILENAME = PATHS["filenames"]["qualitative_answers"]
 
-NETTSKJEMA_PATH = DATA_FOLDER / NETTSKJEMA_FILENAME
+SURVEY_PATH = DATA_FOLDER / SURVEY_FILENAME
 ALL_EXPERIMENTS_PATH = DATA_FOLDER / ALL_EXPERIMENTS_FILENAME
-NETTSKJEMA_QUESTIONS_PATH = DATA_FOLDER / NETTSKJEMA_QUESTIONS_FILENAME
+SURVEY_QUESTIONS_PATH = DATA_FOLDER / SURVEY_QUESTIONS_FILENAME
 
 
 def get_experiment_results_path(participant_number):

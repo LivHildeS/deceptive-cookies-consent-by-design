@@ -106,10 +106,9 @@ def process_participant_data():
             # Check which withdrawal columns that exists, and save them for later with corresponding answer time.
             withdrawal_column_name = f"Withdraw.{device}.{website}.time"
             if withdrawal_column_name in df:
-                withdrawal_column_names.append({
-                    "withdraw": withdrawal_column_name,
-                    "answer": f"{device}.{website}.time"
-                })
+                withdrawal_column_names.append(
+                    {"withdraw": withdrawal_column_name, "answer": f"{device}.{website}.time"}
+                )
 
     average_withdrawal_times = []
     average_consent_given_withdrawal_times = []
@@ -139,21 +138,21 @@ def process_participant_data():
     return df
 
 
-def process_nettskjema_data(df):
+def process_survey_data(df):
     """
-    Processes the nettskjema data.
+    Processes the survey data.
     Calculates a score based on the cookie answers.
     Makes a quantitative version of the Likert answers.
     Make int version of the ages.
 
     Args:
-        df (pd.DataFrame): Pandas dataframe with the nettskjema data.
+        df (pd.DataFrame): Pandas dataframe with the survey data.
 
     Returns:
         pd.DataFrame: The dataframe processed.
     """
     # Set new column names
-    column_names = CONSTANTS["nettskjema_column_names"]
+    column_names = CONSTANTS["survey_column_names"]
     df.columns = column_names.values()
 
     # Calculate amount of correctly answered cookie questions
@@ -186,7 +185,7 @@ def process_nettskjema_data(df):
     df["age"] = df["age"].str.strip()  # Remove trailing whitespace
     df["age_int"] = df["age"].map(age_mapping)
 
-    # Remove trailing whitespaces and wrongly encoded unicode characters (from UiO Nettskjema)
+    # Remove trailing whitespaces and wrongly encoded unicode characters (from the survey)
     for column in column_names.values():
         if column == "submission_id":
             continue
@@ -212,10 +211,12 @@ def write_qualitative_answers_per_participant(df):
         "Q5: How do you feel about cookie consent banners?",
         "Q10: During the task-solving earlier, you were presented with cookie consent banners from the various "
         "web-sites. Can you explain why you chose the responses you did to these banners?",
-        "Q13: Do you have any other comments?"
+        "Q13: Do you have any other comments?",
     ]
     qualitative_questions_column_names = [
-        "cookie_banner_feeling", "banner_response_reasoning", "freetext_additional_comments"
+        "cookie_banner_feeling",
+        "banner_response_reasoning",
+        "freetext_additional_comments",
     ]
 
     for i, row in df.iterrows():
